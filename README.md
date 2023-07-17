@@ -1,5 +1,5 @@
 
-https://github.com/nbnitin/DynamicAppIcon/assets/5785670/cc3edc53-d776-4630-a4e3-3f01e80d417c
+
 # DynamicAppIcon
 
 Icon files need to be bundled and listed in your plist file therefore they may not be dynamically added (only set).
