@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var selectedItem : UUID?
     
     var body: some View {
+        
         List(listOfImages,id: \.id, selection: $selectedItem ,rowContent: {item in
             
             HStack(alignment:.center , spacing:10) {
@@ -29,10 +30,12 @@ struct ContentView: View {
                     .foregroundColor(Color.black)
                 Spacer()
                 
-                if item.id == selectedItem {
+                if item.id == selectedItem || item.imageName == getCurrentAppIconName() {
                     Image(systemName: "checkmark")
                         .foregroundColor(.blue)
                 }
+                
+               
             }
             .contentShape(Rectangle())//this will help to add tap gesture to entire full list row
             
@@ -86,6 +89,11 @@ func getList()->[ImagesData] {
     //as app icon is defualt application's icon and not being displayed fron info.plist, so we are adding it manually
     
     return data
+}
+
+func getCurrentAppIconName() -> String {
+    
+    return UIApplication.shared.alternateIconName ?? "AppIcon"
 }
 
 struct ContentView_Previews: PreviewProvider {
