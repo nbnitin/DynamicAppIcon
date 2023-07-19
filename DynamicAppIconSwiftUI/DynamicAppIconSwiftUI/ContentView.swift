@@ -13,43 +13,48 @@ struct ImagesData: Identifiable, Hashable {
 }
 
 struct ContentView: View {
-    @State var listOfImages : [ImagesData] = getList()
+    @State var listOfImages : [ImagesData] = [ImagesData]()
     @State private var selectedItem : UUID?
-    
+   
     var body: some View {
-        
-        List(listOfImages,id: \.id, selection: $selectedItem ,rowContent: {item in
-            
-            HStack(alignment:.center , spacing:10) {
+       
+            List(listOfImages,id: \.id, selection: $selectedItem ,rowContent: {item in
                 
-                Image(item.imageName?.replacingOccurrences(of: "Icon", with: "Image") ?? "")
-                    .resizable()
-                    .frame(width: 30,height: 30)
-                
-                Text(item.imageName ?? "")
-                    .foregroundColor(Color.black)
-                Spacer()
-                
-                if item.id == selectedItem || item.imageName == getCurrentAppIconName() {
-                    Image(systemName: "checkmark")
-                        .foregroundColor(.blue)
+                HStack(alignment:.center , spacing:10) {
+                    
+                    Image(item.imageName?.replacingOccurrences(of: "Icon", with: "Image") ?? "")
+                        .resizable()
+                        .frame(width: 30,height: 30)
+                    
+                    Text(item.imageName ?? "")
+                        .foregroundColor(Color.black)
+                    Spacer()
+                    
+                    if item.id == selectedItem  {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(.blue)
+                    }
+                    
+                    
                 }
+                .contentShape(Rectangle())//this will help to add tap gesture to entire full list row
                 
-               
+                
+                .onTapGesture {
+                    selectedItem = item.id
+                    let imageName = item.imageName == "AppIcon" ? nil : item.imageName?.replacingOccurrences(of: "Image", with: "Icon")
+                    updateAppIcon(imageName)
+                }
+                .listRowBackground(Color.clear)
+                .padding([.top,.bottom], 10)
+            })
+            .listStyle(.inset)
+            .onAppear(){
+                listOfImages = getList()
+                selectedItem = listOfImages.first(where: {
+                    $0.imageName == getCurrentAppIconName()
+                })?.id
             }
-            .contentShape(Rectangle())//this will help to add tap gesture to entire full list row
-            
-            
-            
-            .onTapGesture {
-                selectedItem = item.id
-                let imageName = item.imageName == "AppIcon" ? nil : item.imageName?.replacingOccurrences(of: "Image", with: "Icon")
-                updateAppIcon(imageName)
-            }
-            .listRowBackground(Color.clear)
-            .padding([.top,.bottom], 10)
-        })
-        .listStyle(.inset)
     }
 }
 
